@@ -1,9 +1,9 @@
-import java.util.Vector;
+import java.util.*;
 
 public class Date {
 
 	private String[][] dateFixList = { { "Jan", "January", "31" }, { "Feb", "February", "28" },
-			{ "Mar", "March", "31" }, { "Apr", "April", "30" }, { "Jun", "June", "30" }, { "Jul", "July", "31" },
+			{ "Mar", "March", "31" }, { "Apr", "April", "30" }, {"May", "May", "31"}, { "Jun", "June", "30" }, { "Jul", "July", "31" },
 			{ "Aug", "August", "31" }, { "Sept", "September", "30" }, { "Oct", "October", "31" },
 			{ "Nov", "November", "30" }, { "Dec", "December", "31" } };
 
@@ -14,20 +14,26 @@ public class Date {
 	private int counter = 0;
 	private DateRange dateRangeObject = new DateRange();
 	private boolean dateRangeFlag = false;
+	private int forLoopI = 0;
+	private boolean incorrectSpellingAndInvalidDateFlag = true;
 
 	public Date() {
 	};
 
 	public void processStringPrintDates() {
-		this.dateString = dateContainer.get(getCounter()-1);
+		for (forLoopI = 0; forLoopI < dateContainer.size(); forLoopI++) {
+			this.dateString = dateContainer.get(forLoopI);
 
-		splitTheString();
-		fixMonth();
-		reattachStringToPrint();
-		createDateRange(checkIfDateRange());
-		System.out.println(dateContainer.get(getCounter()-1));
-		if(dateRangeFlag){
-			System.out.println(dateRangeObject.toString());
+			splitTheString();
+			fixMonth();
+			reattachStringToPrint();
+			createDateRange(checkIfDateRange());
+			System.out.println("Date: " + dateContainer.get(forLoopI));
+			if (dateRangeFlag) {
+				System.out.println(dateRangeObject.toString());
+				dateRangeFlag = false;
+			}
+			incorrectSpellingAndInvalidDateFlag = true;
 		}
 	}
 
@@ -61,32 +67,41 @@ public class Date {
 		dateString = dateString.replace(",", "");
 		splitString = dateString.split("\\s+");
 	}
-
+	
 	public void fixMonth() {
 		for (int i = 0; i < dateFixList.length; i++) {
-			if (splitString[0].equals(dateFixList[i][0])) {
+			if (splitString[0].matches(dateFixList[i][0])) {
 				splitString[0] = dateFixList[i][1];
-			}
-			if (Integer.parseInt(splitString[1]) > Integer.parseInt(dateFixList[i][2])) {
-				printThisDate = "Invalid Date";
+				incorrectSpellingAndInvalidDateFlag = false;
+
+				if (Integer.parseInt(splitString[1]) > Integer.parseInt(dateFixList[i][2])) {
+					printThisDate = "Invalid Date";
+					incorrectSpellingAndInvalidDateFlag = true;
+				}
+			} else if (splitString[0].matches(dateFixList[i][1])) {
+				incorrectSpellingAndInvalidDateFlag = false;
+				if (Integer.parseInt(splitString[1]) > Integer.parseInt(dateFixList[i][2])) {
+					printThisDate = "Invalid Date";
+					incorrectSpellingAndInvalidDateFlag = true;
+				}
 			}
 		}
 	}
 
 	public void reattachStringToPrint() {
-		if (printThisDate != "Invalid Date") {
+		if (!incorrectSpellingAndInvalidDateFlag) {
+			printThisDate = "";
 			splitString[1] = splitString[1] + ",";
 			for (String index : splitString) {
 				printThisDate += index + " ";
 			}
 		}
-		dateContainer.add(getCounter()-1, printThisDate);
+		dateContainer.set(forLoopI, printThisDate);
 	}
 
 	public boolean checkIfDateRange() {
-		if (getCounter() >= 2) {
-			if (dateContainer.get(getCounter()-1) == "Invalid Date"
-					|| dateContainer.get(getCounter() - 2) == "Invalid Date") {
+		if (forLoopI >= 1) {
+			if (dateContainer.get(forLoopI) == "Invalid Date" || dateContainer.get(forLoopI - 1) == "Invalid Date") {
 				return false;
 			} else {
 				return true;
@@ -97,15 +112,19 @@ public class Date {
 
 	private void createDateRange(boolean checkIfDateRange) {
 		if (checkIfDateRange) {
-			dateString = dateContainer.get(getCounter()-1);
+			dateString = dateContainer.get(forLoopI);
+			splitTheString();
 			String[] thisDate = splitString;
 
-			dateString = dateContainer.get(getCounter() - 2);
+			dateString = dateContainer.get(forLoopI - 1);
+			splitTheString();
 			String[] lastDate = splitString;
 
-			if (compareTo(thisDate, lastDate) == 1) {
-				String dateRangeString = "DateRange: " + dateContainer.get(getCounter() - 2) + " - "
-						+ dateContainer.get(getCounter()-1) + "\n";
+			int compareFlag = compareTo(thisDate, lastDate);
+
+			if (compareFlag == 1) {
+				String dateRangeString = "DateRange: " + dateContainer.get(forLoopI - 1) + " - Date: "
+						+ dateContainer.get(forLoopI);
 				dateRangeObject.add(dateRangeString);
 				dateRangeFlag = true;
 			}
@@ -120,17 +139,22 @@ public class Date {
 		int lastMonth = 0;
 
 		for (int i = 0; i < months.length; i++) {
-			if (thisDate[0] == months[i]) {
+			if (thisDate[0].matches(months[i])) {
 				thisMonth = i;
 			}
-			if (lastDate[0] == months[i]) {
+			if (lastDate[0].matches(months[i])) {
 				lastMonth = i;
 			}
 		}
 
-		if (Integer.parseInt(lastDate[3]) == Integer.parseInt(thisDate[3])) {
+		if (Integer.parseInt(lastDate[2]) == Integer.parseInt(thisDate[2])) {
 			if (lastMonth == thisMonth) {
-				if (Integer.parseInt(lastDate[2]) == Integer.parseInt(thisDate[2])) {
+				String lastDay = lastDate[1];
+				String thisDay = thisDate[1];
+
+				int lDay = Integer.parseInt(lastDay);
+				int tDay = Integer.parseInt(thisDay);
+				if (lDay == tDay) {
 					return 0;
 				}
 			} else if (lastMonth < thisMonth) {
@@ -138,7 +162,7 @@ public class Date {
 			} else {
 				return -1;
 			}
-		} else if (Integer.parseInt(lastDate[3]) < Integer.parseInt(thisDate[3])) {
+		} else if (Integer.parseInt(lastDate[2]) < Integer.parseInt(thisDate[2])) {
 			return 1;
 		} else {
 			return -1;
@@ -147,7 +171,7 @@ public class Date {
 	}
 
 	public String toString() {
-		return "Date: " + dateContainer.get(getCounter()-1);
+		return "Date: " + dateContainer.get(forLoopI);
 	}
 
 }

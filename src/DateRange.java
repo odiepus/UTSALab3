@@ -2,8 +2,8 @@ import java.util.Vector;
 
 public class DateRange {
 
-	private Vector<String> dateHolder;
-	private int counter = 0;
+	private Vector<String> dateHolder = new Vector<String>();
+	private int counter = -1 ;
 
 	public DateRange() {
 	};
