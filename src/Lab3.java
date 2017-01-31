@@ -8,8 +8,7 @@ public class Lab3 {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		 Vector<Date> dateContainer;
-		
+		Date Dates;
 		 Scanner input = null;
 		
 		 try {
@@ -19,16 +18,15 @@ public class Lab3 {
 		 System.exit(1);
 		 }
 		
-		 dateContainer = new Vector<Date>();
+		 Dates = new Date();
 		 DateRange dateRangeObject = new DateRange();
 		 
 		 while (input.hasNext()) {
-		 Date holder = new Date(input.nextLine());
-		 System.out.println(holder.toString());
-		 dateRangeObject.add(holder.getSplitString());
-		 System.out.println(holder.toString());
+		 Dates.add(input.nextLine());
+		 System.out.println();
+		 dateRangeObject.add();
+		 System.out.println();
 		 System.out.println(dateRangeObject.toString());
-		 dateContainer.add(holder);
 		 }
 		 
 		 

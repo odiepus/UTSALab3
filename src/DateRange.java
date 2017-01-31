@@ -8,19 +8,9 @@ public class DateRange {
 	
 	public DateRange(){};
 	
-	public DateRange(String[] inputDate){
-		this.dateHolder.add(inputDate);
-		
-		if (dateHolder.size() > 1){
-			makeDateRange();
-		}
+	public void add(){
+	
 	}
-	
-	
-	public void add(String[] inputDate){
-		dateHolder.add(inputDate);
-	}
-	
 	
 
 }
