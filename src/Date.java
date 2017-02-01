@@ -1,3 +1,28 @@
+/**
+ * @author Hector R Herrera
+ *  The Date object will take in string of dates. The dates will 
+ *  be parsed to remove abbreviations and replace with correct full
+ *  length spelling. The days are checked to ensure that they are
+ *  within the range of each individual month. It is assumed that
+ *  every year is a leap year thus February need only go up to 28 days.
+ *  After days are stored the process if fixing the format beings.
+ *  
+ *  First the punctuation are removed and replaced with spaces. 
+ *  Then the dates a broken down into String arrays. The month,
+ *  day and year are checked for correctness. If a date is invalid 
+ *  because an abbreviation does not match a correct date or the day 
+ *  is greater that what a month should have, the original string 
+ *  of the date is replaced with "Invalid Date". This will be outputed
+ *  later when the dates are to be outputed.
+ *  
+ *  Once the date is correctly formated and is not invalid, the 
+ *  string date container is checked for a prior input of a date. 
+ *  if there is a date that was inputed before the present date string
+ *  then they are compared. If the current date String is later than the 
+ *  prior inputed string a date range string is created and sent to 
+ *  the dateRange object for storage and output. 
+ */
+
 import java.util.*;
 
 public class Date {
